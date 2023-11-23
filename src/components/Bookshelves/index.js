@@ -1,6 +1,8 @@
 import {Component} from 'react'
 import Cookies from 'js-cookie'
 import Header from '../Header'
+import List from '../List'
+import './index.css'
 
 const bookshelvesList = [
   {
@@ -26,14 +28,15 @@ const bookshelvesList = [
 ]
 
 class Bookshelves extends Component {
-  state = {bookshelfName: 'read', searchText: 'Luke'}
+  state = {bookshelfName: '', searchText: '', bookslist: []}
 
   componentDidMount() {
     this.getbooks1()
   }
 
   getbooks1 = async () => {
-    const {searchText, bookshelfName} = this.state
+    const {searchText, bookshelfName, bookslist} = this.state
+    console.log(bookshelfName)
     const url = `https://apis.ccbp.in/book-hub/books?shelf=${bookshelfName}&search=${searchText}`
     const jwtToken = Cookies.get('jwt_token')
     const options = {
@@ -44,14 +47,63 @@ class Bookshelves extends Component {
     }
     const response1 = await fetch(url, options)
     const data1 = await response1.json()
-    console.log(data1)
+    this.setState({
+      bookslist: data1.books,
+    })
+  }
+
+  searchEl = event => {
+    this.setState({searchText: event.target.value})
+    this.getbooks1()
+  }
+
+  SelectedEl = value => {
+    this.setState({bookshelfName: value})
+    this.getbooks1()
   }
 
   render() {
+    const {searchText, bookshelfName, bookslist} = this.state
+    console.log(bookslist)
     return (
       <div>
         <Header />
-        <h1>Bookshelves</h1>
+        <div className="books">
+          <div>
+            <h1>Bookshelves</h1>
+            {bookshelvesList.map(i => (
+              <List i={i} SelectedEl={this.SelectedEl} />
+            ))}
+          </div>
+          <div>
+            <div className="books">
+              <h1>Read Books</h1>
+              <input
+                type="search"
+                placeholder="Search"
+                onChange={this.searchEl}
+              />
+            </div>
+            <div>
+              {' '}
+              {bookslist.map(p => (
+                <div className="image3">
+                  <div className="books">
+                    <img src={p.cover_pic} />
+                    <div>
+                      <h1>{p.title}</h1>
+                      <p>{p.author_name}</p>
+                      <p>Avg Rating {p.rating}</p>
+                      <p>
+                        Status :<p className="label">{p.read_status}</p>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         <div>
           <img src="https://res.cloudinary.com/doahpqitj/image/upload/v1700586374/Group_7395_j8ofqu.png" />
           <p>Contact Us</p>

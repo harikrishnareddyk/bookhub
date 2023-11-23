@@ -1,0 +1,10 @@
+.books {
+  display: flex;
+}
+.image3 {
+  margin: 10px;
+}
+
+.label {
+  color: blue;
+}

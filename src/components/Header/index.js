@@ -1,5 +1,6 @@
 import {Link, withRouter} from 'react-router-dom'
 import Cookies from 'js-cookie'
+import './index.css'
 
 const Header = props => {
   const logout = () => {
@@ -9,7 +10,7 @@ const Header = props => {
   }
 
   return (
-    <nav>
+    <nav className="books">
       <Link to="/">
         <img
           src="https://res.cloudinary.com/doahpqitj/image/upload/v1700243104/Group_7731_purnjz.png"
